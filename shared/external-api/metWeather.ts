@@ -51,6 +51,7 @@ type MetWeatherApiResponse = {
 export type WeatherMetadata = {
   forecastNow: WeatherMappedData;
   forecastFuture: WeatherMappedData[];
+  secondsToRain: number | null;
 };
 
 type WeatherMappedData = {
@@ -98,9 +99,12 @@ export async function getMetWeather(): Promise<WeatherMetadata | null> {
     return null;
   }
 
+  const secondsToRain = parsedData.find((forecast) => forecast.precipitation !== undefined)?.forecastMinFromNow ?? null;
+
   const response: WeatherMetadata = {
     forecastNow: forecastNow,
     forecastFuture: parsedData,
+    secondsToRain,
   };
 
   return response;
